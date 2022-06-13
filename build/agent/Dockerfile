@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+
 FROM golang:1.18
 WORKDIR /build
 COPY . .
@@ -7,8 +7,14 @@ ENV GOOS=linux
 
 RUN cd cmd/agent;go build -o /runner -mod mod -a .
 
-FROM alpine
-RUN apk --no-cache add ca-certificates git
+FROM bitnami/kubectl
+USER root
+RUN mkdir -p $HOME/.kubepug  && \
+    cd $HOME/.kubepug && \
+    wget https://github.com/rikatz/kubepug/releases/download/v1.1.3/kubepug_linux_amd64.tar.gz && \
+    tar -zxvf kubepug_linux_amd64.tar.gz && \
+    rm -f kubepug_linux_amd64.tar.gz
 WORKDIR /root/
 COPY --from=0 /runner /bin/runner
-ENTRYPOINT ["/bin/runner"]
+USER 1001
+ENTRYPOINT ["kubectl", "deprecations"]
