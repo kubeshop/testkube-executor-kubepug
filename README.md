@@ -1,8 +1,8 @@
 ![Testkube Logo](https://raw.githubusercontent.com/kubeshop/testkube/main/assets/testkube-color-gray.png)
 
-# Welcome to TestKube Template Executor
+# Welcome to TestKube kubepug Executor
 
-TestKube Template Executor is a test executor skeleton for [TestKube](https://testkube.io).  
+TestKube kubepug Executor is a test executor skeleton for [TestKube](https://testkube.io).  
 You can use it as basic building blocks for creating a new executor.
 
 # What is an Executor?
@@ -16,8 +16,8 @@ Please follow the main [TestKube repository](https://github.com/kubeshop/testkub
 
 ## Implemention in several steps:
 
-1. Create new repo on top of this template 
-2. Change `go.mod` file with your path (just replace `github.com/kubeshop/testkube-executor-template` project-wise with your package path) 
+1. Create new repo on top of this kubepug 
+2. Change `go.mod` file with your path (just replace `github.com/kubeshop/testkube-executor-kubepug` project-wise with your package path) 
 3. Implement your own Runner on top of [runner interface](https://github.com/kubeshop/testkube/blob/main/pkg/runner/interface.go
 4. Change Dockerfile - use base image of whatever test framework/library you want to use
 5. Build and push dockerfile to some repository
@@ -31,7 +31,7 @@ metadata:
   namespace: testkube
 spec:
   executor_type: job
-  image: kubeshop/testkube-template-executor:0.0.1
+  image: kubeshop/testkube-kubepug-executor:0.0.1
   types:
   - example/test
 ```
@@ -39,7 +39,7 @@ spec:
 
 ## Architecture
 
-This Executor template offers you basic building blocks to write a new executor based on TestKube 
+This Executor kubepug offers you basic building blocks to write a new executor based on TestKube 
 libraries written in Go programming language, but you're not limited only to Go, you can 
 write in any other programming language like Rust, Javascript, Java or Clojure.
 
@@ -59,9 +59,9 @@ Go based resources for input and output objects:
 
 ## Examples
 
-- This template repo, which is the simplest one
+- This kubepug repo, which is the simplest one
 - [Postman executor](https://github.com/kubeshop/testkube-executor-postman)
-- [Cypress executor](https://github.com/kubeshop/testkube-executor-cypress)
+- [kubepug executor](https://github.com/kubeshop/testkube-executor-kubepug)
 - [Curl executor](https://github.com/kubeshop/testkube-executor-curl)
 
 

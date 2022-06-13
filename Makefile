@@ -1,4 +1,4 @@
-NAME ?= testkube-executor-template
+NAME ?= testkube-kubepug-executor
 BIN_DIR ?= $(HOME)/bin
 
 build:

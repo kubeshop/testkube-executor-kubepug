@@ -6,18 +6,18 @@ import (
 	"github.com/kubeshop/testkube/pkg/executor/output"
 )
 
-func NewRunner() *ExampleRunner {
-	return &ExampleRunner{
+func NewRunner() *KubepugRunner {
+	return &KubepugRunner{
 		Fetcher: content.NewFetcher(""),
 	}
 }
 
-// ExampleRunner for template - change me to some valid runner
-type ExampleRunner struct {
+// KubepugRunner runs kubepug against cluster
+type KubepugRunner struct {
 	Fetcher content.ContentFetcher
 }
 
-func (r *ExampleRunner) Run(execution testkube.Execution) (result testkube.ExecutionResult, err error) {
+func (r *KubepugRunner) Run(execution testkube.Execution) (result testkube.ExecutionResult, err error) {
 
 	// use `execution.Variables` for variables passed from Test/Execution
 	// variables of type "secret" will be automatically decoded

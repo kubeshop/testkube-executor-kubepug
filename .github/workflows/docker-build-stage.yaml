@@ -1,9 +1,8 @@
 name: Docker images building and pushing
 on:
   push:
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
-      - "v[0-9]+.[0-9]+.[0-9]+-*"
+    branches:
+      - main
 
 jobs:
   docker:
@@ -30,10 +29,6 @@ jobs:
         with:
           images: kubeshop/testkube-kubepug-executor
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
             type=sha
 
       - name: Build kubepug Runner
@@ -44,3 +39,17 @@ jobs:
             ${{ steps.meta_kubepug_executor.outputs.bake-file }}
           targets: build
           push: true
+
+      - name: Output commit sha
+        id: github_sha
+        run: |
+          echo "::set-output name=sha_short::${GITHUB_SHA::7}"
+
+      #Trigger Helm repo workflow to deploy Dashboard to Stage cluster
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.CI_BOT_TOKEN }}
+          repository: kubeshop/helm-charts
+          event-type: trigger-workflow-executor
+          client-payload: '{"image_tag_executor": "sha-${{ steps.github_sha.outputs.sha_short }}", "executor_name": "kubepug"}'
