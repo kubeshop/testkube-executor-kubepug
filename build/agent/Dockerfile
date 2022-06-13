@@ -14,7 +14,8 @@ RUN mkdir -p $HOME/.kubepug  && \
     wget https://github.com/rikatz/kubepug/releases/download/v1.1.3/kubepug_linux_amd64.tar.gz && \
     tar -zxvf kubepug_linux_amd64.tar.gz && \
     rm -f kubepug_linux_amd64.tar.gz
+ENV PATH="$HOME/.kubepug/:${PATH}"
 WORKDIR /root/
 COPY --from=0 /runner /bin/runner
 USER 1001
-ENTRYPOINT ["kubectl", "deprecations"]
+ENTRYPOINT ["kubepug"]
