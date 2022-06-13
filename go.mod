@@ -1,4 +1,4 @@
-module github.com/kubeshop/testkube-executor-template
+module github.com/kubeshop/testkube-executor-kubepug
 
 go 1.18
 
