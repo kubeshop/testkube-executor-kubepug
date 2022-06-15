@@ -5,15 +5,20 @@ import (
 	"fmt"
 )
 
+// Result is the output of the execution of kubepug
 type Result struct {
 	DeprecatedAPIs []DeprecatedAPIs `json:"DeprecatedAPIs"`
 	DeletedAPIs    []DeletedAPIs    `json:"DeletedAPIs"`
 }
+
+// Items describe vulnerable items from a Kubernetes cluster
 type Items struct {
 	Scope      string `json:"Scope"`
 	ObjectName string `json:"ObjectName"`
 	Namespace  string `json:"Namespace"`
 }
+
+// DeprecatedAPIs describe APIs that were deprecated from Kubernetes but still available in the cluster
 type DeprecatedAPIs struct {
 	Description string  `json:"Description"`
 	Group       string  `json:"Group"`
@@ -23,6 +28,8 @@ type DeprecatedAPIs struct {
 	Deprecated  bool    `json:"Deprecated"`
 	Items       []Items `json:"Items"`
 }
+
+// DeletedAPIs describe APIs that were deleted from Kubernetes but still available in the cluster
 type DeletedAPIs struct {
 	Group   string  `json:"Group"`
 	Kind    string  `json:"Kind"`
