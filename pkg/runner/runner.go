@@ -22,11 +22,8 @@ type KubepugRunner struct {
 	Fetcher content.ContentFetcher
 }
 
+// Run runs the kubepug executable and parses it's output to be Testkube-compatible
 func (r *KubepugRunner) Run(execution testkube.Execution) (result testkube.ExecutionResult, err error) {
-
-	// use `execution.Variables` for variables passed from Test/Execution
-	// variables of type "secret" will be automatically decoded
-
 	path, err := r.Fetcher.Fetch(execution.Content)
 	if err != nil {
 		return result, err
@@ -35,15 +32,11 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (result testkube.Execu
 	output.PrintEvent("created content path", path)
 
 	if execution.Content.IsFile() {
-		output.PrintEvent("using file", execution)
-		// TODO implement file based test content for string, git-file, file-uri
-		//      or remove if not used
+		output.PrintEvent("using single file", execution)
 	}
 
 	if execution.Content.IsDir() {
 		output.PrintEvent("using dir", execution)
-		// TODO implement file based test content for git-dir
-		//      or remove if not used
 	}
 
 	out, err := executor.Run("", "kubectl", "deprecations", "--format=json", "--input-file", path) // TODO update to kubepug
@@ -59,11 +52,6 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (result testkube.Execu
 
 	deprecatedAPIstep := createDeprecatedAPIsStep(kResult)
 	deletedAPIstep := createDeletedAPIsStep(kResult)
-
-	// error result should be returned if something is not ok
-	// return result.Err(fmt.Errorf("some test execution related error occured"))
-
-	// TODO return ExecutionResult
 
 	return testkube.ExecutionResult{
 		Status: getResultStatus(kResult),

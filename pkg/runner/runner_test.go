@@ -76,12 +76,23 @@ items:
 	})
 }
 
-func TestRunFile(t *testing.T) {
-	t.Skip()
-}
-
 func TestRunFileURI(t *testing.T) {
-	t.Skip()
+	t.Run("runner should return success on valid yaml gist", func(t *testing.T) {
+		runner := NewRunner()
+		execution := testkube.NewQueuedExecution()
+		execution.Content = &testkube.TestContent{
+			Type_: string(testkube.TestContentTypeFileURI),
+			Uri:   "https://gist.githubusercontent.com/vLia/b3df9e43f55fd43d1bca93cdfd5ae27c/raw/535e8db46f33693a793c616fc1e2b4d77c4b06d2/example-k8s-pod-yaml",
+		}
+
+		result, err := runner.Run(*execution)
+
+		assert.NoError(t, err)
+		assert.Equal(t, testkube.ExecutionStatusPassed, result.Status)
+		assert.Equal(t, 2, len(result.Steps))
+		assert.Equal(t, "passed", result.Steps[0].Status)
+		assert.Equal(t, "passed", result.Steps[1].Status)
+	})
 }
 
 func TestRunGitFile(t *testing.T) {
