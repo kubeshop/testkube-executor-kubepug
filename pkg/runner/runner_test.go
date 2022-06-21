@@ -7,20 +7,96 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRun(t *testing.T) {
-
-	t.Run("runner should run test based on execution data", func(t *testing.T) {
-		// given
+func TestRunString(t *testing.T) {
+	t.Run("runner should return success and empty result on empty string", func(t *testing.T) {
 		runner := NewRunner()
 		execution := testkube.NewQueuedExecution()
-		execution.Content = testkube.NewStringTestContent("hello I'm test content")
+		execution.Content = testkube.NewStringTestContent("")
 
-		// when
 		result, err := runner.Run(*execution)
 
-		// then
 		assert.NoError(t, err)
-		assert.Equal(t, result.Status, testkube.ExecutionStatusPassed)
+		assert.Equal(t, testkube.ExecutionStatusPassed, result.Status)
+		assert.Equal(t, 2, len(result.Steps))
+		assert.Equal(t, "passed", result.Steps[0].Status)
+		assert.Equal(t, "passed", result.Steps[1].Status)
 	})
 
+	t.Run("runner should return success and empty result on passing yaml", func(t *testing.T) {
+		runner := NewRunner()
+		execution := testkube.NewQueuedExecution()
+		execution.Content = testkube.NewStringTestContent(`
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    annotations:
+      control-plane.alpha.kubernetes.io/leader: '{"holderIdentity":"ingress-nginx-controller-646d5d4d67-7nx7r","leaseDurationSeconds":30,"acquireTime":"2022-05-31T23:08:52Z","renewTime":"2022-06-20T16:17:51Z","leaderTransitions":12}'
+    creationTimestamp: "2021-10-07T13:44:37Z"
+    name: ingress-controller-leader
+    namespace: default
+    resourceVersion: "170745168"
+    uid: 9bb57467-b5c4-41fe-83a8-9513ae86fbff
+
+`)
+
+		result, err := runner.Run(*execution)
+
+		assert.NoError(t, err)
+		assert.Equal(t, testkube.ExecutionStatusPassed, result.Status)
+		assert.Equal(t, 2, len(result.Steps))
+		assert.Equal(t, "passed", result.Steps[0].Status)
+		assert.Equal(t, "passed", result.Steps[1].Status)
+	})
+	t.Run("runner should return failure and list of deprecated APIs result on yaml containing deprecated API", func(t *testing.T) {
+		runner := NewRunner()
+		execution := testkube.NewQueuedExecution()
+		execution.Content = testkube.NewStringTestContent(`
+apiVersion: v1
+items:
+- apiVersion: v1
+  conditions:
+  - message: '{"health":"true"}'
+    status: "True"
+    type: Healthy
+  kind: ComponentStatus
+  metadata:
+    creationTimestamp: null
+    name: etcd-1
+`)
+
+		result, err := runner.Run(*execution)
+
+		assert.NoError(t, err)
+		assert.Equal(t, testkube.ExecutionStatusFailed, result.Status)
+		assert.Equal(t, 2, len(result.Steps))
+		assert.Equal(t, "failed", result.Steps[0].Status)
+		assert.Equal(t, "passed", result.Steps[1].Status)
+	})
+}
+
+func TestRunFile(t *testing.T) {
+	t.Skip()
+}
+
+func TestRunFileURI(t *testing.T) {
+	t.Skip()
+}
+
+func TestRunGitFile(t *testing.T) {
+	t.Skip()
+}
+
+func TestRunGitDirectory(t *testing.T) {
+	t.Skip()
+}
+
+func TestRunDirectConnection(t *testing.T) {
+	// Will likely not be implemented
+	t.Skip()
+}
+
+func TestRunWithSpecificK8sVersion(t *testing.T) {
+	t.Skip()
 }
