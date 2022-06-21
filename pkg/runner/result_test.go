@@ -3,6 +3,7 @@ package runner
 import (
 	"testing"
 
+	kubepug "github.com/rikatz/kubepug/pkg/results"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,7 +13,7 @@ func TestResultParser(t *testing.T) {
 		output := `{"DeprecatedAPIs":null,"DeletedAPIs":null}`
 		result, err := GetResult(output)
 		assert.NoError(t, err)
-		assert.Equal(t, Result{
+		assert.Equal(t, kubepug.Result{
 			DeprecatedAPIs: nil,
 			DeletedAPIs:    nil,
 		}, result)
@@ -60,14 +61,14 @@ func TestResultParser(t *testing.T) {
 			],
 			"DeletedAPIs": null
 			}`
-		expected := Result{
-			DeprecatedAPIs: []DeprecatedAPIs{
+		expected := kubepug.Result{
+			DeprecatedAPIs: []kubepug.DeprecatedAPI{
 				{
 					Description: "ComponentStatus (and ComponentStatusList) holds the cluster validation info. Deprecated: This API is deprecated in v1.19+",
 					Kind:        "ComponentStatus",
 					Version:     "v1",
 					Deprecated:  true,
-					Items: []Items{
+					Items: []kubepug.Item{
 						{
 							Scope:      "GLOBAL",
 							ObjectName: "scheduler",
@@ -153,15 +154,15 @@ func TestResultParser(t *testing.T) {
 			]
 		  }
 		`
-		expected := Result{
-			DeletedAPIs: []DeletedAPIs{
+		expected := kubepug.Result{
+			DeletedAPIs: []kubepug.DeletedAPI{
 				{
 					Group:   "extensions",
 					Kind:    "Ingress",
 					Version: "v1beta1",
 					Name:    "ingresses",
 					Deleted: true,
-					Items: []Items{
+					Items: []kubepug.Item{
 						{
 							Scope:      "OBJECT",
 							ObjectName: "cli-testkube-api-server-testkube",
@@ -200,7 +201,7 @@ func TestResultParser(t *testing.T) {
 					Version: "v1beta1",
 					Name:    "podsecuritypolicies",
 					Deleted: true,
-					Items: []Items{
+					Items: []kubepug.Item{
 						{
 							Scope:      "GLOBAL",
 							ObjectName: "gce.gke-metrics-agent",
@@ -306,14 +307,14 @@ func TestResultParser(t *testing.T) {
 			]
 		  }
 		`
-		expected := Result{
-			DeprecatedAPIs: []DeprecatedAPIs{
+		expected := kubepug.Result{
+			DeprecatedAPIs: []kubepug.DeprecatedAPI{
 				{
 					Description: "ComponentStatus (and ComponentStatusList) holds the cluster validation info. Deprecated: This API is deprecated in v1.19+",
 					Kind:        "ComponentStatus",
 					Version:     "v1",
 					Deprecated:  true,
-					Items: []Items{
+					Items: []kubepug.Item{
 						{
 							Scope:      "GLOBAL",
 							ObjectName: "scheduler",
@@ -333,14 +334,14 @@ func TestResultParser(t *testing.T) {
 					},
 				},
 			},
-			DeletedAPIs: []DeletedAPIs{
+			DeletedAPIs: []kubepug.DeletedAPI{
 				{
 					Group:   "extensions",
 					Kind:    "Ingress",
 					Version: "v1beta1",
 					Name:    "ingresses",
 					Deleted: true,
-					Items: []Items{
+					Items: []kubepug.Item{
 						{
 							Scope:      "OBJECT",
 							ObjectName: "cli-testkube-api-server-testkube",
@@ -379,7 +380,7 @@ func TestResultParser(t *testing.T) {
 					Version: "v1beta1",
 					Name:    "podsecuritypolicies",
 					Deleted: true,
-					Items: []Items{
+					Items: []kubepug.Item{
 						{
 							Scope:      "GLOBAL",
 							ObjectName: "gce.gke-metrics-agent",
