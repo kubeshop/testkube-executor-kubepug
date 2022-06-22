@@ -18,4 +18,4 @@ ENV PATH="$HOME/.kubepug/:${PATH}"
 WORKDIR /root/
 COPY --from=0 /runner /bin/runner
 USER 1001
-ENTRYPOINT ["kubepug"]
+ENTRYPOINT ["/bin/runner"]

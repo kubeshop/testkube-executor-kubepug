@@ -45,7 +45,7 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionRes
 	}
 
 	output.PrintEvent("running kubepug with arguments", args)
-	out, err := executor.Run("", "kubectl", args...) // TODO update to kubepug
+	out, err := executor.Run("", "kubepug", args...)
 	if err != nil {
 		return testkube.ExecutionResult{}, fmt.Errorf("could not execute kubepug: %w", err)
 	}
@@ -124,10 +124,6 @@ func getResultStatus(r kubepug.Result) *testkube.ExecutionStatus {
 
 // buildArgs builds up the arguments for
 func buildArgs(args []string, inputPath string) ([]string, error) {
-	s := []string{"deprecations"}
-	s = append(s, args...)
-
-	args = s
 	for _, a := range args {
 		if strings.Contains(a, "--format") {
 			return []string{}, fmt.Errorf("the Testkube Kubepug executor does not accept the \"--format\" parameter: %s", a)
