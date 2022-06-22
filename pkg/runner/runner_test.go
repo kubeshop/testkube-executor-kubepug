@@ -32,7 +32,7 @@ items:
   kind: ConfigMap
   metadata:
     annotations:
-      control-plane.alpha.kubernetes.io/leader: '{"holderIdentity":"ingress-nginx-controller-646d5d4d67-7nx7r","leaseDurationSeconds":30,"acquireTime":"2022-05-31T23:08:52Z","renewTime":"2022-06-20T16:17:51Z","leaderTransitions":12}'
+      control-plane.alpha.kubernetes.io/leader: '{"holderIdentity":"ingress-nginx-controller-646d5d4d67-7nx7r"}'
     creationTimestamp: "2021-10-07T13:44:37Z"
     name: ingress-controller-leader
     namespace: default
@@ -82,7 +82,8 @@ func TestRunFileURI(t *testing.T) {
 		execution := testkube.NewQueuedExecution()
 		execution.Content = &testkube.TestContent{
 			Type_: string(testkube.TestContentTypeFileURI),
-			Uri:   "https://gist.githubusercontent.com/vLia/b3df9e43f55fd43d1bca93cdfd5ae27c/raw/535e8db46f33693a793c616fc1e2b4d77c4b06d2/example-k8s-pod-yaml",
+			Uri: "https://gist.githubusercontent.com/vLia/" +
+				"b3df9e43f55fd43d1bca93cdfd5ae27c/raw/535e8db46f33693a793c616fc1e2b4d77c4b06d2/example-k8s-pod-yaml",
 		}
 
 		result, err := runner.Run(*execution)
@@ -98,7 +99,8 @@ func TestRunFileURI(t *testing.T) {
 		execution := testkube.NewQueuedExecution()
 		execution.Content = &testkube.TestContent{
 			Type_: string(testkube.TestContentTypeFileURI),
-			Uri:   "https://gist.githubusercontent.com/vLia/91289de9cc8b6953be5f90b0a52fa8d3/raw/a8ed0b07361b84873c6b71fb8be6e334224062d4/example-k8s-pod-yaml-deprecated",
+			Uri: "https://gist.githubusercontent.com/vLia/" +
+				"91289de9cc8b6953be5f90b0a52fa8d3/raw/a8ed0b07361b84873c6b71fb8be6e334224062d4/example-k8s-pod-yaml-deprecated",
 		}
 
 		result, err := runner.Run(*execution)
@@ -180,7 +182,8 @@ func TestRunDirectConnection(t *testing.T) {
 
 func TestRunWithSpecificK8sVersion(t *testing.T) {
 	// To be implemented
-	t.Run("runner should return failure and list of deprecated APIs result on yaml containing deprecated API with current K8s version", func(t *testing.T) {
+	t.Run("runner should return failure and list of deprecated APIs result "+
+		"on yaml containing deprecated API with current K8s version", func(t *testing.T) {
 		runner := NewRunner()
 		execution := testkube.NewQueuedExecution()
 		execution.Content = testkube.NewStringTestContent(`

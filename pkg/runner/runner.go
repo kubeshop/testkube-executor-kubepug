@@ -24,10 +24,10 @@ type KubepugRunner struct {
 }
 
 // Run runs the kubepug executable and parses it's output to be Testkube-compatible
-func (r *KubepugRunner) Run(execution testkube.Execution) (result testkube.ExecutionResult, err error) {
+func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionResult, error) {
 	path, err := r.Fetcher.Fetch(execution.Content)
 	if err != nil {
-		return result, err
+		return testkube.ExecutionResult{}, fmt.Errorf("could not get content: %w", err)
 	}
 	output.PrintEvent("created content path", path)
 
@@ -50,17 +50,16 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (result testkube.Execu
 		return testkube.ExecutionResult{}, fmt.Errorf("could not execute kubepug: %w", err)
 	}
 
-	var kResult kubepug.Result
-	err = json.Unmarshal(out, &kResult)
+	var kubepugResult kubepug.Result
+	err = json.Unmarshal(out, &kubepugResult)
 	if err != nil {
-		return testkube.ExecutionResult{}, fmt.Errorf("could not unmarshal kubepug execution result: %s", err)
+		return testkube.ExecutionResult{}, fmt.Errorf("could not unmarshal kubepug execution result: %w", err)
 	}
 
-	deprecatedAPIstep := createDeprecatedAPIsStep(kResult)
-	deletedAPIstep := createDeletedAPIsStep(kResult)
-
+	deprecatedAPIstep := createDeprecatedAPIsStep(kubepugResult)
+	deletedAPIstep := createDeletedAPIsStep(kubepugResult)
 	return testkube.ExecutionResult{
-		Status: getResultStatus(kResult),
+		Status: getResultStatus(kubepugResult),
 		Output: string(out),
 		Steps: []testkube.ExecutionStepResult{
 			deprecatedAPIstep,
