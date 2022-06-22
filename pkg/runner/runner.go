@@ -3,6 +3,7 @@ package runner
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/kubeshop/testkube/pkg/api/v1/testkube"
 	"github.com/kubeshop/testkube/pkg/executor"
@@ -28,7 +29,6 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (result testkube.Execu
 	if err != nil {
 		return result, err
 	}
-
 	output.PrintEvent("created content path", path)
 
 	if execution.Content.IsFile() {
@@ -39,7 +39,13 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (result testkube.Execu
 		output.PrintEvent("using dir", execution)
 	}
 
-	out, err := executor.Run("", "kubectl", "deprecations", "--format=json", "--input-file", path) // TODO update to kubepug
+	args, err := buildArgs(execution.Args, path)
+	if err != nil {
+		return testkube.ExecutionResult{}, fmt.Errorf("could not build up parameters: %w", err)
+	}
+
+	output.PrintEvent("running kubepug with arguments", args)
+	out, err := executor.Run("", "kubectl", args...) // TODO update to kubepug
 	if err != nil {
 		return testkube.ExecutionResult{}, fmt.Errorf("could not execute kubepug: %w", err)
 	}
@@ -115,4 +121,21 @@ func getResultStatus(r kubepug.Result) *testkube.ExecutionStatus {
 		return testkube.ExecutionStatusPassed
 	}
 	return testkube.ExecutionStatusFailed
+}
+
+// buildArgs builds up the arguments for
+func buildArgs(args []string, inputPath string) ([]string, error) {
+	s := []string{"deprecations"}
+	s = append(s, args...)
+
+	args = s
+	for _, a := range args {
+		if strings.Contains(a, "--format") {
+			return []string{}, fmt.Errorf("the Testkube Kubepug executor does not accept the \"--format\" parameter: %s", a)
+		}
+		if strings.Contains(a, "--input-file") {
+			return []string{}, fmt.Errorf("the Testkube Kubepug executor does not accept the \"--input-file\" parameter: %s", a)
+		}
+	}
+	return append(args, "--format=json", "--input-file", inputPath), nil
 }

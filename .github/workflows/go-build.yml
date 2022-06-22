@@ -19,5 +19,11 @@ jobs:
       with:
         go-version: 1.18
 
+    - name: golangci-lint
+      uses: golangci/golangci-lint-action@v3
+
+    - name: Set up Kubepug
+      uses: cpanato/kubepug-installer@main
+
     - name: Test
-      run: go test -v ./...
+      run: make tests
