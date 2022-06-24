@@ -27,17 +27,15 @@ func TestRunString(t *testing.T) {
 		execution := testkube.NewQueuedExecution()
 		execution.Content = testkube.NewStringTestContent(`
 apiVersion: v1
-items:
-- apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    annotations:
-      control-plane.alpha.kubernetes.io/leader: '{"holderIdentity":"ingress-nginx-controller-646d5d4d67-7nx7r"}'
-    creationTimestamp: "2021-10-07T13:44:37Z"
-    name: ingress-controller-leader
-    namespace: default
-    resourceVersion: "170745168"
-    uid: 9bb57467-b5c4-41fe-83a8-9513ae86fbff
+kind: ConfigMap
+metadata:
+  annotations:
+    control-plane.alpha.kubernetes.io/leader: '{"holderIdentity":"ingress-nginx-controller-646d5d4d67-7nx7r"}'
+  creationTimestamp: "2021-10-07T13:44:37Z"
+  name: ingress-controller-leader
+  namespace: default
+  resourceVersion: "170745168"
+  uid: 9bb57467-b5c4-41fe-83a8-9513ae86fbff
 `)
 
 		result, err := runner.Run(*execution)
@@ -53,16 +51,14 @@ items:
 		execution := testkube.NewQueuedExecution()
 		execution.Content = testkube.NewStringTestContent(`
 apiVersion: v1
-items:
-- apiVersion: v1
-  conditions:
-  - message: '{"health":"true"}'
-    status: "True"
-    type: Healthy
-  kind: ComponentStatus
-  metadata:
-    creationTimestamp: null
-    name: etcd-1
+conditions:
+- message: '{"health":"true"}'
+  status: "True"
+  type: Healthy
+kind: ComponentStatus
+metadata:
+  creationTimestamp: null
+  name: etcd-1
 `)
 
 		result, err := runner.Run(*execution)
@@ -182,16 +178,14 @@ func TestRunWithSpecificK8sVersion(t *testing.T) {
 		execution := testkube.NewQueuedExecution()
 		execution.Content = testkube.NewStringTestContent(`
 apiVersion: v1
-items:
-- apiVersion: v1
-  conditions:
-  - message: '{"health":"true"}'
-    status: "True"
-    type: Healthy
-  kind: ComponentStatus
-  metadata:
-    creationTimestamp: null
-    name: etcd-1
+conditions:
+- message: '{"health":"true"}'
+  status: "True"
+  type: Healthy
+kind: ComponentStatus
+metadata:
+  creationTimestamp: null
+  name: etcd-1
 `)
 
 		result, err := runner.Run(*execution)
@@ -210,16 +204,14 @@ items:
 		}
 		execution.Content = testkube.NewStringTestContent(`
 apiVersion: v1
-items:
-- apiVersion: v1
-  conditions:
-  - message: '{"health":"true"}'
-    status: "True"
-    type: Healthy
-  kind: ComponentStatus
-  metadata:
-    creationTimestamp: null
-    name: etcd-1
+conditions:
+- message: '{"health":"true"}'
+  status: "True"
+  type: Healthy
+kind: ComponentStatus
+metadata:
+  creationTimestamp: null
+  name: etcd-1
 `)
 
 		result, err := runner.Run(*execution)
