@@ -45,3 +45,7 @@ version-bump-major:
 
 version-bump-dev:
 	go run cmd/tools/main.go bump --dev
+
+update-modules:
+	go mod tidy
+	go get -u ./...
