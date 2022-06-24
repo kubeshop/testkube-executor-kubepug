@@ -38,7 +38,6 @@ items:
     namespace: default
     resourceVersion: "170745168"
     uid: 9bb57467-b5c4-41fe-83a8-9513ae86fbff
-
 `)
 
 		result, err := runner.Run(*execution)
@@ -173,11 +172,6 @@ func TestRunGitDirectory(t *testing.T) {
 		assert.Equal(t, "passed", result.Steps[0].Status)
 		assert.Equal(t, "passed", result.Steps[1].Status)
 	})
-}
-
-func TestRunDirectConnection(t *testing.T) {
-	// Will likely not be implemented
-	t.Skip()
 }
 
 func TestRunWithSpecificK8sVersion(t *testing.T) {

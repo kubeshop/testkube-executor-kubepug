@@ -13,7 +13,7 @@ mongo-dev:
 	docker run -p 27017:27017 mongo
 
 docker-build: 
-	docker build -t kubeshop/$(NAME) -f build/agent/Dockerfile .
+	docker build -t vlia/$(NAME) -f build/agent/Dockerfile .
 
 install-swagger-codegen-mac: 
 	brew install swagger-codegen
