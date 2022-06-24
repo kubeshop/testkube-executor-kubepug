@@ -171,7 +171,6 @@ func TestRunGitDirectory(t *testing.T) {
 }
 
 func TestRunWithSpecificK8sVersion(t *testing.T) {
-	// To be implemented
 	t.Run("runner should return failure and list of deprecated APIs result "+
 		"on yaml containing deprecated API with current K8s version", func(t *testing.T) {
 		runner := NewRunner()
