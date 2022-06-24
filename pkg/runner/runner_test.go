@@ -95,7 +95,7 @@ func TestRunFileURI(t *testing.T) {
 		execution.Content = &testkube.TestContent{
 			Type_: string(testkube.TestContentTypeFileURI),
 			Uri: "https://gist.githubusercontent.com/vLia/" +
-				"91289de9cc8b6953be5f90b0a52fa8d3/raw/a8ed0b07361b84873c6b71fb8be6e334224062d4/example-k8s-pod-yaml-deprecated",
+				"91289de9cc8b6953be5f90b0a52fa8d3/raw/47e91d90374659646b46fd661f359b851b815cdf/example-k8s-pod-yaml-deprecated",
 		}
 
 		result, err := runner.Run(*execution)
