@@ -26,4 +26,4 @@ jobs:
       uses: cpanato/kubepug-installer@main
 
     - name: Test
-      run: make tests
+      run: make test
