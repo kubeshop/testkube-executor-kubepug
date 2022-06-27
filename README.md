@@ -103,6 +103,11 @@ Args:     --k8s-version=v1.18.0
 Status Test execution completed with success 🥇
 ```
 
+# Known limitations 
+
+- large input files break it - at least when I tried to feed it the output of kubectl api-resources --verbs=list -o name | xargs -n 1 kubectl get --show-kind --ignore-not-found --all-namespaces -o json > all-namespaces-pug.json
+- helm-charts with template variables don’t work. It seems to be a limitation from kubepug, but that’s just a hunch
+
 # Issues and enchancements
 
 Please follow the main [TestKube repository](https://github.com/kubeshop/testkube) for reporting any [issues](https://github.com/kubeshop/testkube/issues) or [discussions](https://github.com/kubeshop/testkube/discussions)
