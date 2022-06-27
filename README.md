@@ -75,7 +75,7 @@ metadata:
 ```
 
 ```bash
-$ kubectl testkube run test kubepug-example-test-1 --args 'k8s-version=v1.18.0'
+$ kubectl testkube run test kubepug-example-test-1 --args '--k8s-version=v1.18.0'
 Type          : kubepug/yaml
 Name          : kubepug-example-test-1
 Execution ID  : 62b59d52657713ea1b003a2d
