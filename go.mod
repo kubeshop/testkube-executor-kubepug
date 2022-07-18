@@ -3,7 +3,7 @@ module github.com/kubeshop/testkube-executor-kubepug
 go 1.18
 
 require (
-	github.com/kubeshop/testkube v1.2.28
+	github.com/kubeshop/testkube v1.3.13
 	github.com/rikatz/kubepug v1.3.3
 	github.com/stretchr/testify v1.7.4
 )
@@ -14,7 +14,6 @@ require (
 	github.com/dustinkirkland/golang-petname v0.0.0-20191129215211-8e5a1ed0cff0 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/gookit/color v1.5.1 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
