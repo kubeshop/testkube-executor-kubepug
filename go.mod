@@ -3,7 +3,7 @@ module github.com/kubeshop/testkube-executor-kubepug
 go 1.18
 
 require (
-	github.com/kubeshop/testkube v1.3.13
+	github.com/kubeshop/testkube v1.3.17
 	github.com/rikatz/kubepug v1.3.3
 	github.com/stretchr/testify v1.7.4
 )
@@ -34,7 +34,7 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/apimachinery v0.24.2 // indirect
+	k8s.io/apimachinery v0.24.3 // indirect
 	k8s.io/klog/v2 v2.60.1 // indirect
 	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9 // indirect
 	sigs.k8s.io/json v0.0.0-20220525155127-227cbc7cc124 // indirect
