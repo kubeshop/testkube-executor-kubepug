@@ -9,6 +9,7 @@ RUN cd cmd/agent;go build -o /runner -mod mod -a .
 
 FROM bitnami/kubectl
 USER root
+RUN apt-get update && apt-get install -y wget
 RUN mkdir -p $HOME/.kubepug  && \
     cd $HOME/.kubepug && \
     wget https://github.com/rikatz/kubepug/releases/download/v1.1.3/kubepug_linux_amd64.tar.gz && \
