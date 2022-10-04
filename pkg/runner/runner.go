@@ -3,12 +3,14 @@ package runner
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/kubeshop/testkube/pkg/api/v1/testkube"
 	"github.com/kubeshop/testkube/pkg/executor"
 	"github.com/kubeshop/testkube/pkg/executor/content"
 	"github.com/kubeshop/testkube/pkg/executor/output"
+	"github.com/kubeshop/testkube/pkg/executor/secret"
 	kubepug "github.com/rikatz/kubepug/pkg/results"
 )
 
@@ -51,7 +53,13 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionRes
 	}
 
 	output.PrintEvent("running kubepug with arguments", args)
-	out, err := executor.Run("", "kubepug", args...)
+	envManager := secret.NewEnvManagerWithVars(execution.Variables)
+	envManager.GetEnvs()
+	for _, env := range execution.Variables {
+		os.Setenv(env.Name, env.Value)
+	}
+	out, err := executor.Run("", "kubepug", envManager, args...)
+	out = envManager.Obfuscate(out)
 	if err != nil {
 		return testkube.ExecutionResult{}, fmt.Errorf("could not execute kubepug: %w", err)
 	}
