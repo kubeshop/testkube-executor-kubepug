@@ -46,12 +46,6 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionRes
 		return testkube.ExecutionResult{}, fmt.Errorf("could not build up parameters: %w", err)
 	}
 
-	// add configuration files
-	err = content.PlaceFiles(execution.CopyFiles)
-	if err != nil {
-		return testkube.ExecutionResult{}, fmt.Errorf("could not place config files: %w", err)
-	}
-
 	output.PrintEvent("running kubepug with arguments", args)
 	envManager := secret.NewEnvManagerWithVars(execution.Variables)
 	envManager.GetVars(execution.Variables)
