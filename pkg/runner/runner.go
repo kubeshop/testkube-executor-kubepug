@@ -52,7 +52,13 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionRes
 	for _, env := range execution.Variables {
 		os.Setenv(env.Name, env.Value)
 	}
-	out, err := executor.Run("", "kubepug", envManager, args...)
+
+	runPath := ""
+	if execution.Content.Repository != nil {
+		runPath = execution.Content.Repository.WorkingDir
+	}
+
+	out, err := executor.Run(runPath, "kubepug", envManager, args...)
 	out = envManager.Obfuscate(out)
 	if err != nil {
 		return testkube.ExecutionResult{}, fmt.Errorf("could not execute kubepug: %w", err)
