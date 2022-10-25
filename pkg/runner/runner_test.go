@@ -8,6 +8,8 @@ import (
 )
 
 func TestRunString(t *testing.T) {
+	t.Skip("This one needs kubepug to be installed")
+
 	t.Run("runner should return success and empty result on empty string", func(t *testing.T) {
 		runner := NewRunner()
 		execution := testkube.NewQueuedExecution()
@@ -72,6 +74,8 @@ metadata:
 }
 
 func TestRunFileURI(t *testing.T) {
+	t.Skip("This one needs kubepug to be installed")
+
 	t.Run("runner should return success on valid yaml gist file URI", func(t *testing.T) {
 		runner := NewRunner()
 		execution := testkube.NewQueuedExecution()
@@ -109,6 +113,8 @@ func TestRunFileURI(t *testing.T) {
 }
 
 func TestRunGitFile(t *testing.T) {
+	t.Skip("This one needs kubepug to be installed")
+
 	t.Run("runner should return error on non-existent Git path", func(t *testing.T) {
 		runner := NewRunner()
 		execution := testkube.NewQueuedExecution()
@@ -148,6 +154,8 @@ func TestRunGitFile(t *testing.T) {
 }
 
 func TestRunGitDirectory(t *testing.T) {
+	t.Skip("This one needs kubepug to be installed")
+
 	t.Run("runner should return success on manifests from Git directory", func(t *testing.T) {
 		runner := NewRunner()
 		execution := testkube.NewQueuedExecution()
@@ -171,6 +179,8 @@ func TestRunGitDirectory(t *testing.T) {
 }
 
 func TestRunWithSpecificK8sVersion(t *testing.T) {
+	t.Skip("This one needs kubepug to be installed")
+
 	t.Run("runner should return failure and list of deprecated APIs result "+
 		"on yaml containing deprecated API with current K8s version", func(t *testing.T) {
 		runner := NewRunner()
