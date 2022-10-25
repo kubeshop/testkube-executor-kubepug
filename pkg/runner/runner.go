@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/kubeshop/testkube/pkg/api/v1/testkube"
@@ -14,15 +15,25 @@ import (
 	kubepug "github.com/rikatz/kubepug/pkg/results"
 )
 
+type Params struct {
+	DataDir string // RUNNER_DATADIR
+}
+
 func NewRunner() *KubepugRunner {
+	params := Params{
+		DataDir: os.Getenv("RUNNER_DATADIR"),
+	}
+
 	return &KubepugRunner{
 		Fetcher: content.NewFetcher(""),
+		params:  params,
 	}
 }
 
 // KubepugRunner runs kubepug against cluster
 type KubepugRunner struct {
 	Fetcher content.ContentFetcher
+	params  Params
 }
 
 // Run runs the kubepug executable and parses it's output to be Testkube-compatible
@@ -55,7 +66,7 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionRes
 
 	runPath := ""
 	if execution.Content.Repository != nil {
-		runPath = execution.Content.Repository.WorkingDir
+		runPath = filepath.Join(r.params.DataDir, "repo", execution.Content.Repository.WorkingDir)
 	}
 
 	out, err := executor.Run(runPath, "kubepug", envManager, args...)
