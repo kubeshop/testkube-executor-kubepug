@@ -65,7 +65,7 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionRes
 	}
 
 	runPath := ""
-	if execution.Content.Repository != nil {
+	if execution.Content.Repository != nil && execution.Content.Repository.WorkingDir != "" {
 		runPath = filepath.Join(r.params.DataDir, "repo", execution.Content.Repository.WorkingDir)
 	}
 
