@@ -11,6 +11,7 @@ import (
 	"github.com/kubeshop/testkube/pkg/executor"
 	"github.com/kubeshop/testkube/pkg/executor/content"
 	"github.com/kubeshop/testkube/pkg/executor/output"
+	"github.com/kubeshop/testkube/pkg/executor/runner"
 	"github.com/kubeshop/testkube/pkg/executor/secret"
 	kubepug "github.com/rikatz/kubepug/pkg/results"
 )
@@ -158,4 +159,9 @@ func buildArgs(args []string, inputPath string) ([]string, error) {
 		}
 	}
 	return append(args, "--format=json", "--input-file", inputPath), nil
+}
+
+// GetType returns runner type
+func (r *KubepugRunner) GetType() runner.Type {
+	return runner.TypeMain
 }
