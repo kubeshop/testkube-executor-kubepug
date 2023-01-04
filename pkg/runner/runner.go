@@ -60,8 +60,8 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionRes
 
 	output.PrintEvent("running kubepug with arguments", args)
 	envManager := secret.NewEnvManagerWithVars(execution.Variables)
-	envManager.GetVars(execution.Variables)
-	for _, env := range execution.Variables {
+	envManager.GetVars(envManager.Variables)
+	for _, env := range envManager.Variables {
 		os.Setenv(env.Name, env.Value)
 	}
 
