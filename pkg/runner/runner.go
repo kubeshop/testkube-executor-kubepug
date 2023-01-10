@@ -13,6 +13,7 @@ import (
 	"github.com/kubeshop/testkube/pkg/executor/output"
 	"github.com/kubeshop/testkube/pkg/executor/runner"
 	"github.com/kubeshop/testkube/pkg/executor/secret"
+	"github.com/kubeshop/testkube/pkg/ui"
 	kubepug "github.com/rikatz/kubepug/pkg/results"
 )
 
@@ -21,9 +22,14 @@ type Params struct {
 }
 
 func NewRunner() *KubepugRunner {
+	output.PrintLog(fmt.Sprintf("%s Preparing test runner", ui.IconTruck))
+
+	output.PrintLog(fmt.Sprintf("%s Reading environment variables...", ui.IconWorld))
 	params := Params{
 		DataDir: os.Getenv("RUNNER_DATADIR"),
 	}
+	output.PrintLog(fmt.Sprintf("%s Environment variables read successfully", ui.IconCheckMark))
+	output.PrintLog(fmt.Sprintf("RUNNER_DATADIR=\"%s\"", params.DataDir))
 
 	return &KubepugRunner{
 		Fetcher: content.NewFetcher(""),
@@ -39,26 +45,28 @@ type KubepugRunner struct {
 
 // Run runs the kubepug executable and parses it's output to be Testkube-compatible
 func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionResult, error) {
+	output.PrintLog(fmt.Sprintf("%s Preparing for test run", ui.IconTruck))
+
 	path, err := r.Fetcher.Fetch(execution.Content)
 	if err != nil {
 		return testkube.ExecutionResult{}, fmt.Errorf("could not get content: %w", err)
 	}
-	output.PrintEvent("created content path", path)
 
 	if execution.Content.IsFile() {
-		output.PrintEvent("using single file", execution)
+		output.PrintLog(fmt.Sprintf("%s Using single file: %v", ui.IconFile, execution))
 	}
 
 	if execution.Content.IsDir() {
-		output.PrintEvent("using dir", execution)
+		output.PrintLog(fmt.Sprintf("%s Using dir: %v", ui.IconFile, execution))
 	}
 
 	args, err := buildArgs(execution.Args, path)
 	if err != nil {
+		output.PrintLog(fmt.Sprintf("%s Could not build up parameters: %s", ui.IconCross, err.Error()))
 		return testkube.ExecutionResult{}, fmt.Errorf("could not build up parameters: %w", err)
 	}
 
-	output.PrintEvent("running kubepug with arguments", args)
+	output.PrintLog(fmt.Sprintf("%s Running kubepug with arguments: %v", ui.IconWorld, args))
 	envManager := secret.NewEnvManagerWithVars(execution.Variables)
 	envManager.GetVars(envManager.Variables)
 	for _, env := range envManager.Variables {
@@ -73,12 +81,14 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionRes
 	out, err := executor.Run(runPath, "kubepug", envManager, args...)
 	out = envManager.Obfuscate(out)
 	if err != nil {
+		output.PrintLog(fmt.Sprintf("%s Could not execute kubepug: %s", ui.IconCross, err.Error()))
 		return testkube.ExecutionResult{}, fmt.Errorf("could not execute kubepug: %w", err)
 	}
 
 	var kubepugResult kubepug.Result
 	err = json.Unmarshal(out, &kubepugResult)
 	if err != nil {
+		output.PrintLog(fmt.Sprintf("%s could not unmarshal kubepug execution result: %s", ui.IconCross, err.Error()))
 		return testkube.ExecutionResult{}, fmt.Errorf("could not unmarshal kubepug execution result: %w", err)
 	}
 
@@ -102,11 +112,13 @@ func createDeprecatedAPIsStep(r kubepug.Result) testkube.ExecutionStepResult {
 
 	if len(r.DeprecatedAPIs) == 0 {
 		step.Status = "passed"
+		output.PrintLog(fmt.Sprintf("%s No deprecated APIs found", ui.IconCheckMark))
 		return step
 	}
 
 	step.Status = "failed"
-	for _, api := range r.DeletedAPIs {
+	output.PrintLog(fmt.Sprintf("%s Found deprecated APIs: %v", ui.IconCross, r.DeletedAPIs))
+	for _, api := range r.DeprecatedAPIs {
 		step.AssertionResults = append(step.AssertionResults, testkube.AssertionResult{
 			Name:         api.Name,
 			Status:       "failed",
@@ -125,10 +137,12 @@ func createDeletedAPIsStep(r kubepug.Result) testkube.ExecutionStepResult {
 
 	if len(r.DeletedAPIs) == 0 {
 		step.Status = "passed"
+		output.PrintLog(fmt.Sprintf("%s No deleted APIs found", ui.IconCheckMark))
 		return step
 	}
 
 	step.Status = "failed"
+	output.PrintLog(fmt.Sprintf("%s Found deleted APIs: %v", ui.IconCross, r.DeletedAPIs))
 	for _, api := range r.DeletedAPIs {
 		step.AssertionResults = append(step.AssertionResults, testkube.AssertionResult{
 			Name:         api.Name,
