@@ -7,7 +7,7 @@ ENV GOOS=linux
 
 RUN cd cmd/agent;go build -o /runner -mod mod -a .
 
-FROM rancher/kubectl:v1.23.7
+FROM zcube/bitnami-compat-kubectl
 USER root
 RUN apt-get update && apt-get install -y wget
 RUN mkdir -p $HOME/.kubepug  && \
