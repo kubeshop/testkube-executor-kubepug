@@ -1,13 +1,13 @@
 # syntax=docker/dockerfile:1
-FROM golang:1.18
+FROM --platform=$BUILDPLATFORM golang:1.18
 WORKDIR /build
 COPY . .
 ENV CGO_ENABLED=0 
 ENV GOOS=linux
+ARG TARGETOS TARGETARCH
+RUN cd cmd/agent; GOOS=$TARGETOS GOARCH=$TARGETARCH go build -o /runner -mod mod -a .
 
-RUN cd cmd/agent;go build -o /runner -mod mod -a .
-
-FROM zcube/bitnami-compat-kubectl
+FROM zcube/bitnami-compat-kubectl:1.26.0
 USER root
 RUN apt-get update && apt-get install -y wget
 RUN mkdir -p $HOME/.kubepug  && \
