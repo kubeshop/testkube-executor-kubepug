@@ -69,9 +69,6 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionRes
 	output.PrintLog(fmt.Sprintf("%s Running kubepug with arguments: %v", ui.IconWorld, args))
 	envManager := secret.NewEnvManagerWithVars(execution.Variables)
 	envManager.GetVars(envManager.Variables)
-	for _, env := range envManager.Variables {
-		os.Setenv(env.Name, env.Value)
-	}
 
 	runPath := ""
 	if execution.Content.Repository != nil && execution.Content.Repository.WorkingDir != "" {
