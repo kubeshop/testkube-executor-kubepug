@@ -10,9 +10,9 @@ import (
 	"github.com/kubeshop/testkube/pkg/api/v1/testkube"
 	"github.com/kubeshop/testkube/pkg/executor"
 	"github.com/kubeshop/testkube/pkg/executor/content"
+	"github.com/kubeshop/testkube/pkg/executor/env"
 	"github.com/kubeshop/testkube/pkg/executor/output"
 	"github.com/kubeshop/testkube/pkg/executor/runner"
-	"github.com/kubeshop/testkube/pkg/executor/secret"
 	"github.com/kubeshop/testkube/pkg/ui"
 	kubepug "github.com/rikatz/kubepug/pkg/results"
 )
@@ -67,8 +67,8 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionRes
 	}
 
 	output.PrintLog(fmt.Sprintf("%s Running kubepug with arguments: %v", ui.IconWorld, args))
-	envManager := secret.NewEnvManagerWithVars(execution.Variables)
-	envManager.GetVars(envManager.Variables)
+	envManager := env.NewManagerWithVars(execution.Variables)
+	envManager.GetReferenceVars(envManager.Variables)
 
 	runPath := ""
 	if execution.Content.Repository != nil && execution.Content.Repository.WorkingDir != "" {
@@ -76,7 +76,7 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionRes
 	}
 
 	out, err := executor.Run(runPath, "kubepug", envManager, args...)
-	out = envManager.Obfuscate(out)
+	out = envManager.ObfuscateSecrets(out)
 	if err != nil {
 		output.PrintLog(fmt.Sprintf("%s Could not execute kubepug: %s", ui.IconCross, err.Error()))
 		return testkube.ExecutionResult{}, fmt.Errorf("could not execute kubepug: %w", err)
