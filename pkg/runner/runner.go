@@ -52,22 +52,20 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionRes
 		return testkube.ExecutionResult{}, fmt.Errorf("could not get content: %w", err)
 	}
 
-	isDir := false
+	contentType := ""
 	if execution.Content.Repository != nil {
-		contentType, err := r.Fetcher.CalculateGitContentType(*execution.Content.Repository)
+		contentType, err = r.Fetcher.CalculateGitContentType(*execution.Content.Repository)
 		if err != nil {
 			output.PrintLog(fmt.Sprintf("%s Could not detect git conent type: %v", ui.IconCross, err))
 			return testkube.ExecutionResult{}, err
 		}
-
-		isDir = contentType == string(testkube.TestContentTypeGitDir)
 	}
 
-	if !isDir {
+	if contentType != string(testkube.TestContentTypeGitDir) {
 		output.PrintLog(fmt.Sprintf("%s Using single file: %v", ui.IconFile, execution))
 	}
 
-	if isDir {
+	if contentType == string(testkube.TestContentTypeGitDir) {
 		output.PrintLog(fmt.Sprintf("%s Using dir: %v", ui.IconFile, execution))
 	}
 
