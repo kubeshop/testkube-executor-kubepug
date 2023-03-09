@@ -52,11 +52,16 @@ func (r *KubepugRunner) Run(execution testkube.Execution) (testkube.ExecutionRes
 		return testkube.ExecutionResult{}, fmt.Errorf("could not get content: %w", err)
 	}
 
-	if execution.Content.IsFile() {
+	fileInfo, err := os.Stat(path)
+	if err != nil {
+		return testkube.ExecutionResult{}, err
+	}
+
+	if !fileInfo.IsDir() {
 		output.PrintLog(fmt.Sprintf("%s Using single file: %v", ui.IconFile, execution))
 	}
 
-	if execution.Content.IsDir() {
+	if fileInfo.IsDir() {
 		output.PrintLog(fmt.Sprintf("%s Using dir: %v", ui.IconFile, execution))
 	}
 
