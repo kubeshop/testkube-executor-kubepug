@@ -32,7 +32,7 @@ func NewRunner() *KubepugRunner {
 	output.PrintLog(fmt.Sprintf("RUNNER_DATADIR=\"%s\"", params.DataDir))
 
 	return &KubepugRunner{
-		Fetcher: content.NewFetcher(""),
+		Fetcher: content.NewFetcher(params.DataDir),
 		params:  params,
 	}
 }
